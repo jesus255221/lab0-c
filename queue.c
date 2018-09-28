@@ -37,12 +37,16 @@ queue_t *q_new()
 void q_free(queue_t *q)
 {
     /* How about freeing the list elements and the strings? */
-    if (!q || !(q->head))
+    if (!q)
         return;
     /* Free queue structure */
-    list_ele_t *current_ptr;
-    while () {
-    }
+    list_ele_t *current_ptr = q->head, *prev;
+    while (current_ptr != NULL) {
+        free(current_ptr->value);         // Free the current string
+        prev = current_ptr;               // Save the previous list node
+        current_ptr = current_ptr->next;  // Go to the next node
+        free(prev);                       // free the previous node
+    };
     free(q);
 }
 
@@ -67,7 +71,7 @@ bool q_insert_head(queue_t *q, char *s)
     /* Don't forget to allocate space for the string and copy it */
     // malloc string size plus the terminating character
     newh->value = malloc(sizeof(strlen(s)) + 1);
-    //Copy the string
+    // Copy the string
     strcpy(newh->value, s);
 
     /* What if either call to malloc returns NULL? */
