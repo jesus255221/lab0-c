@@ -19,7 +19,7 @@
 #include "queue.h"
 
 #define NULL_CHECK(condition) \
-    if (!condition) {         \
+    if (condition == NULL) {  \
         return false;         \
     }
 
@@ -46,7 +46,9 @@ queue_t *q_new()
 void q_free(queue_t *q)
 {
     /* How about freeing the list elements and the strings? */
-    NULL_CHECK(q);
+    if (!q) {
+        return;
+    }
     /* Free queue structure */
     list_ele_t *current_ptr = q->head, *prev;
     while (current_ptr != NULL) {
@@ -125,16 +127,13 @@ bool q_insert_tail(queue_t *q, char *s)
     newt->value[strlen(s)] = '\0';
     newt->next = NULL;
 
-    printf("\n%s\n", newt->value);
-
     // If this node is the first node
     if (!q->q_size) {
         q->head = newt;
-        q->tail = newt;
     } else {
         q->tail->next = newt;
-        q->tail = newt;
     }
+    q->tail = newt;
     q->q_size++;
     return true;
 }
@@ -150,7 +149,24 @@ bool q_insert_tail(queue_t *q, char *s)
 bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
     /* You need to fix up this code. */
+    NULL_CHECK(q);
+    if (sp) {
+        if (strlen(q->head->value) >= (bufsize - 2)) {
+            strncpy(sp, q->head->value, bufsize - 2);
+        } else {
+            strncpy(sp, q->head->value, strlen(q->head->value));
+        }
+        sp[strlen(q->head->value)] = '\0';
+    }
+    free(q->head->value);
+    list_ele_t *head;
+    head = q->head;
     q->head = q->head->next;
+    q->q_size--;
+    if (q->q_size) {
+        q->tail = NULL;
+    }
+    free(head);
     return true;
 }
 
