@@ -18,6 +18,13 @@
 #include "harness.h"
 #include "queue.h"
 
+#define NULL_CHECK(condition) \
+    if (!condition) {         \
+        return false;         \
+    }
+
+
+
 /*
   Create empty queue.
   Return NULL if could not allocate space.
@@ -30,6 +37,8 @@ queue_t *q_new()
         return NULL;
     }
     q->head = NULL;
+    q->tail = NULL;
+    q->q_size = 0;
     return q;
 }
 
@@ -37,8 +46,7 @@ queue_t *q_new()
 void q_free(queue_t *q)
 {
     /* How about freeing the list elements and the strings? */
-    if (!q)
-        return;
+    NULL_CHECK(q);
     /* Free queue structure */
     list_ele_t *current_ptr = q->head, *prev;
     while (current_ptr != NULL) {
@@ -61,27 +69,31 @@ bool q_insert_head(queue_t *q, char *s)
 {
     list_ele_t *newh;
     /* What should you do if the q is NULL? */
-    if (!q) {
-        return false;
-    }
+    NULL_CHECK(q);
     newh = malloc(sizeof(list_ele_t));
-    if (!newh) {
-        return false;
-    }
+    NULL_CHECK(newh);
     /* Don't forget to allocate space for the string and copy it */
     // malloc string size plus the terminating character
-    newh->value = malloc(sizeof(strlen(s)) + 1);
-    // Copy the string
-    strcpy(newh->value, s);
+    newh->value = malloc(strlen(s) + 1);
 
     /* What if either call to malloc returns NULL? */
+    /* If malloc failed... */
     if (!newh->value) {
         free(newh);
         return false;
     }
 
+    // Copy the string
+    strcpy(newh->value, s);
+    newh->value[strlen(s)] = '\0';
+    printf("%s\n", newh->value);
+    /* If this is the first node in the list, set the tail to it*/
+    if (!q->q_size) {
+        q->tail = newh;
+    }
     newh->next = q->head;
     q->head = newh;
+    q->q_size++;
     return true;
 }
 
@@ -97,7 +109,34 @@ bool q_insert_tail(queue_t *q, char *s)
 {
     /* You need to write the complete code for this function */
     /* Remember: It should operate in O(1) time */
-    return false;
+    list_ele_t *newt;
+    NULL_CHECK(q);
+    newt = malloc(sizeof(list_ele_t));
+    NULL_CHECK(newt);
+
+    newt->value = malloc(strlen(s) + 1);
+
+    if (!newt->value) {
+        free(newt);
+        return false;
+    }
+
+    strcpy(newt->value, s);
+    newt->value[strlen(s)] = '\0';
+    newt->next = NULL;
+
+    printf("\n%s\n", newt->value);
+
+    // If this node is the first node
+    if (!q->q_size) {
+        q->head = newt;
+        q->tail = newt;
+    } else {
+        q->tail->next = newt;
+        q->tail = newt;
+    }
+    q->q_size++;
+    return true;
 }
 
 /*
