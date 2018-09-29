@@ -1,0 +1,54 @@
+scripts/driver.py
+# Test of insert_head and remove_head
+# Test of insert_head, insert_tail, and remove_head
+# Test of insert_head, insert_tail, reverse, and remove_head
+# Test of insert_head, insert_tail, and size
+# Test of insert_head, insert_tail, remove_head reverse, and size
+# Test of truncated strings
+ERROR:  Removed value meerkat_panda_squirrel_vulturXXXXXX != expected value meerkat_panda_squirrel_vulture
+ERROR:  Removed value aardvark_bear_dolphin_gerbiXXXXXXXX != expected value aardvark_bear_dolphin_gerbil
+ERROR:  Removed value aardvark_bear_dolphiXXXXXXXXXXXXXXX != expected value aardvark_bear_dolphin
+ERROR:  Removed value meerkat_panda_squirreXXXXXXXXXXXXXX != expected value meerkat_panda_squirrel
+ERROR:  Removed value meerkaXXXXXXXXXXXXXXXXXXXXXXXXXXXXX != expected value meerkat
+Error limit exceeded.  Stopping command execution
+# Test operations on NULL queue
+# Test operations on empty queue
+# Test remove_head with NULL argument
+# Test of malloc failure on new
+# Test of malloc failure on insert_head
+# Test of malloc failure on insert_tail
+# Test performance of insert_tail
+# Test performance of size
+# Test performance of insert_tail, size, and reverse
+---	Trace		Points
++++ TESTING trace trace-01-ops:
+---	trace-01-ops	6/6
++++ TESTING trace trace-02-ops:
+---	trace-02-ops	6/6
++++ TESTING trace trace-03-ops:
+---	trace-03-ops	6/6
++++ TESTING trace trace-04-ops:
+---	trace-04-ops	6/6
++++ TESTING trace trace-05-ops:
+---	trace-05-ops	6/6
++++ TESTING trace trace-06-string:
+---	trace-06-string	0/7
++++ TESTING trace trace-07-robust:
+---	trace-07-robust	7/7
++++ TESTING trace trace-08-robust:
+---	trace-08-robust	7/7
++++ TESTING trace trace-09-robust:
+---	trace-09-robust	7/7
++++ TESTING trace trace-10-malloc:
+---	trace-10-malloc	7/7
++++ TESTING trace trace-11-malloc:
+---	trace-11-malloc	7/7
++++ TESTING trace trace-12-malloc:
+---	trace-12-malloc	7/7
++++ TESTING trace trace-13-perf:
+---	trace-13-perf	7/7
++++ TESTING trace trace-14-perf:
+---	trace-14-perf	7/7
++++ TESTING trace trace-15-perf:
+---	trace-15-perf	7/7
+---	TOTAL		93/100

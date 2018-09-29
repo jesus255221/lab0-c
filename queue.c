@@ -88,7 +88,6 @@ bool q_insert_head(queue_t *q, char *s)
     // Copy the string
     strcpy(newh->value, s);
     newh->value[strlen(s)] = '\0';
-    printf("%s\n", newh->value);
     /* If this is the first node in the list, set the tail to it*/
     if (!q->q_size) {
         q->tail = newh;
@@ -150,20 +149,23 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
 {
     /* You need to fix up this code. */
     NULL_CHECK(q);
+    NULL_CHECK(q->head);
     if (sp) {
-        if (strlen(q->head->value) >= (bufsize - 2)) {
-            strncpy(sp, q->head->value, bufsize - 2);
+        if (strlen(q->head->value) >= (bufsize - 1)) {
+            strncpy(sp, q->head->value, bufsize - 1);
+            sp[bufsize - 1] = '\0';
         } else {
             strncpy(sp, q->head->value, strlen(q->head->value));
+            sp[strlen(q->head->value)] = '\0';
         }
-        sp[strlen(q->head->value)] = '\0';
     }
     free(q->head->value);
     list_ele_t *head;
     head = q->head;
     q->head = q->head->next;
     q->q_size--;
-    if (q->q_size) {
+
+    if (!q->q_size) {
         q->tail = NULL;
     }
     free(head);
@@ -181,7 +183,7 @@ int q_size(queue_t *q)
     if (q)
         return q->q_size;
     else
-        return -1;
+        return 0;
 }
 
 /*
@@ -194,4 +196,20 @@ int q_size(queue_t *q)
 void q_reverse(queue_t *q)
 {
     /* You need to write the code for this function */
+    if (!q) {
+        return;
+    }
+    list_ele_t *prev = NULL, *current = q->head, *next;
+
+    while (current) {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    current = q->head;
+    q->head = q->tail;
+    q->tail = current;
+
+    return;
 }
