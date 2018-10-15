@@ -50,12 +50,12 @@ void q_free(queue_t *q)
         return;
     }
     /* Free queue structure */
-    list_ele_t *current_ptr = q->head, *prev;
+    list_ele_t *current_ptr = q->head;  //, *prev;
     while (current_ptr != NULL) {
-        free(current_ptr->value);         // Free the current string
-        prev = current_ptr;               // Save the previous list node
+        free(current_ptr->value);  // Free the current string
+        // prev = current_ptr;               // Save the previous list node
         current_ptr = current_ptr->next;  // Go to the next node
-        free(prev);                       // free the previous node
+        free(current_ptr->prev);          // free the previous node
     };
     free(q);
 }
@@ -85,14 +85,20 @@ bool q_insert_head(queue_t *q, char *s)
         return false;
     }
 
-    // Copy the string
+    /* Copy the string */
     strcpy(newh->value, s);
     newh->value[strlen(s)] = '\0';
+
     /* If this is the first node in the list, set the tail to it*/
     if (!q->q_size) {
+        q->head = newh;
         q->tail = newh;
+    } else {
+        q->head->prev = newh;
+        q->tail->next = newh;
     }
     newh->next = q->head;
+    newh->prev = q->tail;
     q->head = newh;
     q->q_size++;
     return true;
@@ -117,21 +123,27 @@ bool q_insert_tail(queue_t *q, char *s)
 
     newt->value = malloc(strlen(s) + 1);
 
+    /* What if either call to malloc returns NULL? */
+    /* If malloc failed... */
     if (!newt->value) {
         free(newt);
         return false;
     }
 
+    /* Copy the string */
     strcpy(newt->value, s);
     newt->value[strlen(s)] = '\0';
-    newt->next = NULL;
 
-    // If this node is the first node
+    /* If this node is the first node */
     if (!q->q_size) {
         q->head = newt;
+        q->tail = newt;
     } else {
+        q->head->prev = newt;
         q->tail->next = newt;
     }
+    newt->next = q->head;
+    newt->prev = q->tail;
     q->tail = newt;
     q->q_size++;
     return true;
