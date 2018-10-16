@@ -444,7 +444,7 @@ static bool show_queue(int vlevel)
         report(vlevel, " ... ]");
         return false;
     }
-    if (e == NULL) {
+    if (e == NULL || e == q->head) {
         if (cnt <= big_queue_size)
             report(vlevel, "]");
         else

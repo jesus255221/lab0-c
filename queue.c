@@ -50,14 +50,22 @@ void q_free(queue_t *q)
         return;
     }
     /* Free queue structure */
+    if (!q->head) {
+        free(q);
+        return;
+    }
     list_ele_t *current_ptr = q->head;  //, *prev;
-    while (current_ptr != NULL) {
+    do {
         free(current_ptr->value);  // Free the current string
         // prev = current_ptr;               // Save the previous list node
         current_ptr = current_ptr->next;  // Go to the next node
         free(current_ptr->prev);          // free the previous node
-    };
+    } while (current_ptr !=
+             q->tail);  // Do the action until it reachs the tail of the queue
+    free(current_ptr->value);
+    free(current_ptr);
     free(q);
+    return;
 }
 
 /*
@@ -174,13 +182,15 @@ bool q_remove_head(queue_t *q, char *sp, size_t bufsize)
     free(q->head->value);
     list_ele_t *head;
     head = q->head;
+    q->head->next->prev = q->head->prev;
+    q->head->prev->next = q->head->next;
     q->head = q->head->next;
     q->q_size--;
-
+    free(head);
     if (!q->q_size) {
+        q->head = NULL;
         q->tail = NULL;
     }
-    free(head);
     return true;
 }
 
@@ -208,17 +218,18 @@ int q_size(queue_t *q)
 void q_reverse(queue_t *q)
 {
     /* You need to write the code for this function */
-    if (!q) {
+    if (!q || !q->head) {
         return;
     }
-    list_ele_t *prev = NULL, *current = q->head, *next;
+    list_ele_t *current = q->head, *next;
 
-    while (current) {
+    do {
         next = current->next;
-        current->next = prev;
-        prev = current;
+        current->next = current->prev;
+        current->prev = next;
         current = next;
-    }
+    } while (next != q->head);
+
     current = q->head;
     q->head = q->tail;
     q->tail = current;
